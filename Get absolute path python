@@ -1,0 +1,42 @@
+import os
+
+# input file name and type i.e "Text File.txt", search all computer decides weather to search current directory or entire system
+def getAbsolutePath(fileName, SearchAllComputer = True):
+    # YES UPDATED GET ABS PATH WORKS!!!! (i think, can't test on other os's)
+    # finds file path from anywhere
+    filePath = "error"
+    path = fileName
+    # gets current directory path
+    dir_path = os.path.dirname(os.getcwd())
+
+    # gets directory up to owner to search more of the computers files
+    if SearchAllComputer == True:
+        findSlash = {}
+        findSlash["\\"] = dir_path.find("\\")
+        findSlash["/"] = dir_path.find("/")
+        greater = "\\"
+        for slash in findSlash:
+            if findSlash[slash] >= 0:
+                findSlash[slash] = dir_path[findSlash[slash]+1:].find(slash) + findSlash[slash]+1
+            else:
+                findSlash[slash] = float("-infinity")
+        if findSlash["\\"] >= findSlash["/"] and findSlash["\\"] >= 0:
+            greater = "\\"
+        elif findSlash["/"] >= findSlash["\\"]and findSlash["/"] >= 0:
+            greater = "/"
+        else:
+            greater = ""
+            findSlash[""] = len(dir_path)-1
+        print(greater)
+        print(findSlash)
+        #findUser = dir_path.find("Owner")
+        dir_path = dir_path[0:findSlash[greater]] + greater
+        print(dir_path)
+    
+    for (root, dirs, files) in os.walk(dir_path):
+        for file in files: 
+            if file == path:
+                # if the file is the same as the file name get full root
+                filePath = root+'/'+str(file)
+    
+    return filePath
